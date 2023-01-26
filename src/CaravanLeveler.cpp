@@ -2,8 +2,8 @@
 #include "main.h"
 
 const char deviceName[] = "Sport&Fun Leveler";
-const char *ssid = "FindMichDoch2";
-const char *password = "5AF714A8B";
+const char *ssid = "SSID";
+const char *password = "password";
 bool accelInitialized = false;
 int levelX = 0;
 int levelY = 0;
@@ -14,7 +14,7 @@ int valuationY = 267;
 bool valuationActive = false;
 uint8_t levelThreshold = 5;
 bool invertAxis = false;
-bool useAcessPointMode = false;
+bool useAccessPointMode = false;
 long lastMillis = 0;
 long lastMillisClientAvailable = 0;
 DeepPass<int> deepPassX(1.0 / 5.0);
@@ -58,6 +58,5 @@ void loop()
     if (millis() - lastMillisClientAvailable < 1000)
       level.getLevel();
     lastMillis = millis();
-    Serial.print(".");
   }
 }
