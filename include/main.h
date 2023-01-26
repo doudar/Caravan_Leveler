@@ -45,7 +45,7 @@ extern int valuationY;
 extern bool valuationActive;
 extern uint8_t levelThreshold;
 extern bool invertAxis;
-extern bool useAcessPointMode;
+extern bool useAccessPointMode;
 extern long lastMillis;
 extern long lastMillisClientAvailable;
 extern int minValuationX;

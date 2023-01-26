@@ -2,7 +2,7 @@
 
 void Web_Server::WiFiBegin() {
   //Manually change between WiFi and Accesspoint. AP will be used as a fallback, after 5 seconds
-  if (useAcessPointMode)
+  if (useAccessPointMode)
     CreateAccessPoint();
   else
     ConnectToAccessPoint();
@@ -124,7 +124,7 @@ void Web_Server::handle_setup() {
   txt.concat("|");
   txt.concat(String(invertAxis));
   txt.concat("|");
-  txt.concat(String(useAcessPointMode));
+  txt.concat(String(useAccessPointMode));
   webServer.send(200, "text/plain", txt);
 }
 

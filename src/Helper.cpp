@@ -76,7 +76,7 @@ void Helper::ProcessSetupArguments() {
     }
 
     if (webServer.argName(i).compareTo(F("ap")) == 0) {
-      useAcessPointMode = webServer.arg(i) == "1";
+      useAccessPointMode = webServer.arg(i) == "1";
       data.StoreAP();
     }
 

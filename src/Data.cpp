@@ -51,9 +51,9 @@ void Data::LoadInvertation() {
 }
 
 void Data::LoadAP() {
-  useAcessPointMode = EEPROM.read(EEPROM_LEVEL_ACCESSPOINT);
+  useAccessPointMode = EEPROM.read(EEPROM_LEVEL_ACCESSPOINT);
   Serial.print(F("Loaded AccessPoint: "));
-  Serial.println(useAcessPointMode);
+  Serial.println(useAccessPointMode);
 }
 
 void Data::StoreLevel() {
@@ -77,7 +77,7 @@ void Data::StoreInvertation() {
 }
 
 void Data::StoreAP() {
-  EEPROM.write(EEPROM_LEVEL_ACCESSPOINT, useAcessPointMode);
+  EEPROM.write(EEPROM_LEVEL_ACCESSPOINT, useAccessPointMode);
   EEPROM.commit();
 }
 
