@@ -1,4 +1,6 @@
-void setupOTA(){  
+#include "main.h"
+
+void OTA::setupOTA(){  
   ArduinoOTA.setHostname(deviceName);
   ArduinoOTA.setPassword((const char *)"SportAndFun");
   //Default Port  
@@ -8,10 +10,10 @@ void setupOTA(){
     String type;
     if (ArduinoOTA.getCommand() == U_FLASH)
       type = "sketch";
-    else // U_SPIFFS
+    else // U_LittleFS
       type = "filesystem";
 
-    // NOTE: if updating SPIFFS this would be the place to unmount SPIFFS using SPIFFS.end()
+    // NOTE: if updating LittleFS this would be the place to unmount LittleFS using LittleFS.end()
     Serial.println("Start updating " + type);
   });
   ArduinoOTA.onEnd([]() {

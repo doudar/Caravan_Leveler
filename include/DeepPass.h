@@ -1,3 +1,5 @@
+#include "main.h"
+
 //Original from combie
 //https://forum.arduino.cc/index.php?topic=648602.msg4374622#msg4374622
 template<typename DataType>
@@ -38,13 +40,3 @@ class DeepPass {
     }
 };
 
-// 1.0/5.0 is mostly like an array with 5 lines for average measurment
-DeepPass<int> deepPassX(1.0 / 5.0);
-DeepPass<int> deepPassY(1.0 / 5.0);
-// ------------
-
-void InitDeepPass()
-{
-  deepPassX.setInitial(0);
-  deepPassY.setInitial(0);
-}

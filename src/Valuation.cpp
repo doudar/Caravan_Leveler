@@ -1,9 +1,11 @@
+#include "main.h"
+
 int minValuationX = 0;
 int minValuationY = 0;
 int maxValuationX = 0;
 int maxValuationY = 0;
 
-void Valutation() {
+void Data::Valuation() {
   if (!accelInitialized)
     return;
 

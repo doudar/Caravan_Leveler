@@ -1,9 +1,11 @@
-void getLevel() {
+#include "main.h"
+
+void Level::getLevel() {
   if (!accelInitialized)
     return;
 
   if(valuationActive){
-    Valutation();
+    data.Valuation();
     return;
   }
 
@@ -39,7 +41,7 @@ void getLevel() {
   Serial.println(levelY);
 }
 
-void CalibrateLevel() {
+void Level::CalibrateLevel() {
   //Get current values, store as "Zero-levelled" and write to eeprom
   calibrationX = accel.getX();
   calibrationY = accel.getY();
@@ -48,5 +50,5 @@ void CalibrateLevel() {
   Serial.print(calibrationX);
   Serial.print(" Y: ");
   Serial.println(calibrationY);
-  StoreLevel();
+  data.StoreLevel();
 }

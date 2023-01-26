@@ -13,7 +13,7 @@ This captive portal will force the phone to open up a login-site (_which represe
 * [Things](#Things)
 * [HardwareComponents](#HardwareComponents)
   * [Wiring](#Wiring)
-  * [SPIFFS Upload](#SPIFFS-Upload)
+  * [LittleFS Upload](#LittleFS-Upload)
   * [Libraries](#Libraries)
   * [OTA (Over the Air Update)](#OTA-Over-the-Air-Update)
   * [Power switch](#Power-Switch)
@@ -50,7 +50,7 @@ Settings:
 
 **Save** will store all values above, to the ESP32
 
-**Upload** loads a file to the SPIFFS. To overwrite existing files, the filename must be equal (see [/data](https://github.com/HerrRiebmann/Caravan_Leveler/tree/main/data))!
+**Upload** loads a file to the LittleFS. To overwrite existing files, the filename must be equal (see [/data](https://github.com/HerrRiebmann/Caravan_Leveler/tree/main/data))!
 
 ## Video
 [![](http://img.youtube.com/vi/iUhjaghWvkY/0.jpg)](http://www.youtube.com/watch?v=iUhjaghWvkY "Caravan Leveler")
@@ -88,7 +88,7 @@ ESP 32 | LM2596
 5V | OUT+
 GND | OUT-
 
-### SPIFFS Upload
+### LittleFS Upload
 To upload the HTML, JS and CSS files, I´ve used the [Arduino ESP32 filesystem uploader](https://github.com/me-no-dev/arduino-esp32fs-plugin)
 You can find the latest release [here](https://github.com/me-no-dev/arduino-esp32fs-plugin/releases/) and a tutorial on [RandomNerdTutorials](https://randomnerdtutorials.com/install-esp32-filesystem-uploader-arduino-ide/)
 

@@ -1,4 +1,6 @@
-void WiFiBegin() {
+#include "main.h"
+
+void Web_Server::WiFiBegin() {
   //Manually change between WiFi and Accesspoint. AP will be used as a fallback, after 5 seconds
   if (useAcessPointMode)
     CreateAccessPoint();
@@ -30,7 +32,7 @@ void WiFiBegin() {
   delay(100);
 }
 
-void ConnectToAccessPoint() {
+void Web_Server::ConnectToAccessPoint() {
   WiFi.begin(ssid, password);
 
   long start = millis();
@@ -49,7 +51,7 @@ void ConnectToAccessPoint() {
   Serial.println(WiFi.localIP());  //Show ESP32 IP on serial
 }
 
-void CreateAccessPoint() {
+void Web_Server::CreateAccessPoint() {
   WiFi.disconnect();
   IPAddress local_ip(8, 8, 8, 8);
   IPAddress gateway(8, 8, 8, 8);
@@ -68,7 +70,7 @@ void CreateAccessPoint() {
   dnsServer.start(DNS_PORT, "*", local_ip);
 }
 
-void handle_root() {
+void Web_Server::handle_root() {
   // /
   // /index.html  
   Serial.println(F("Handle Root"));
@@ -76,15 +78,15 @@ void handle_root() {
   PrintIncomingRequest();
   
   String path = "/index.html";
-  if (!SPIFFS.exists(path))
+  if (!LittleFS.exists(path))
     return;
 
-  File f = SPIFFS.open(path);
+  File f = LittleFS.open(path);
   webServer.streamFile(f, "text/html");
   f.close();
 }
 
-void handle_level() {
+void Web_Server::handle_level() {
   // /level
   if (!accelInitialized) {
     webServer.send(400, "text/plain", "Gyro not initialized!");
@@ -96,7 +98,7 @@ void handle_level() {
   txt.concat(String(invertAxis ? levelX * -1 : levelY));
   txt.concat("|");
   txt.concat(String(levelThreshold));
-  String customText = GetCustomText();  
+  String customText = helper.GetCustomText();  
   if(customText.length() > 0){    
     txt.concat("|");
     txt.concat(customText);
@@ -106,13 +108,13 @@ void handle_level() {
   lastMillisClientAvailable = millis();
 }
 
-void handle_setup() {
+void Web_Server::handle_setup() {
   // /setup
   Serial.println(F("Handle Setup"));
 
   //With arguments:
   // /setup?x=123&y=321&inv=0&ap=1
-  ProcessSetupArguments();
+  helper.ProcessSetupArguments();
 
   String txt = String(accelInitialized);
   txt.concat("|");
@@ -126,9 +128,9 @@ void handle_setup() {
   webServer.send(200, "text/plain", txt);
 }
 
-void handle_calibrate() {
+void Web_Server::handle_calibrate() {
   Serial.println(F("Handle Calibration"));
-  CalibrateLevel();
+  level.CalibrateLevel();
   String result = "Calibration OK (";
   result.concat(calibrationX);
   result.concat("/");
@@ -137,7 +139,7 @@ void handle_calibrate() {
   webServer.send(200, "text/plaint", result);
 }
 
-void handle_valuation() {
+void Web_Server::handle_valuation() {
   Serial.println(F("Handle Valuation"));  
   String result = "Calibration ";
   if(valuationActive)
@@ -153,17 +155,17 @@ void handle_valuation() {
   webServer.send(200, "text/plaint", result);
 }
 
-void handle_reset(){
-  LoadData();
+void Web_Server::handle_reset(){
+  data.LoadData();
   webServer.send(200, "text/plaint", "OK");
 }
 
-void handleNotFound() {
+void Web_Server::handleNotFound() {
   Serial.println(F("HandleNotFound"));
 
   PrintIncomingRequest();
 
-  if (captivePortal())
+  if (webserver.captivePortal())
     return;
   String message = F("File Not Found\n\n");
   message += F("URI: ");
@@ -183,15 +185,15 @@ void handleNotFound() {
   webServer.send(404, "text/plain", message);
 }
 
-void handle_success(){
+void Web_Server::handle_success(){
   Serial.println(F("Handle success.txt"));
   webServer.send(200, "text/plain", "success");
 }
 
-boolean captivePortal() {
+boolean Web_Server::captivePortal() {
   Serial.print(F("Captive Check: "));
   Serial.println(webServer.hostHeader());
-  if (!isIp(webServer.hostHeader())) {
+  if (!helper.isIp(webServer.hostHeader())) {
     Serial.println("-Request redirected to captive portal");
     redirect();
     return true;
@@ -199,13 +201,13 @@ boolean captivePortal() {
   return false;
 }
 
-void redirect(){
-  webServer.sendHeader("Location", String("http://") + toStringIp(webServer.client().localIP()), true);
+void Web_Server::redirect(){
+  webServer.sendHeader("Location", String("http://") + helper.toStringIp(webServer.client().localIP()), true);
   webServer.send(302, "text/plain", "");   // Empty content inhibits Content-length header so we have to close the socket ourselves.
   webServer.client().stop(); // Stop is needed because we sent no content length
 }
 
-void PrintIncomingRequest(){  
+void Web_Server::PrintIncomingRequest(){  
   Serial.println(webServer.hostHeader());
   Serial.print("  ");
   Serial.println(webServer.uri());

@@ -1,4 +1,6 @@
-String getContentType(String filename) { // convert the file extension to the MIME type
+#include "main.h"
+
+String Web_Server::getContentType(String filename) { // convert the file extension to the MIME type
   if (filename.endsWith(".html"))
     return "text/html";
   else if (filename.endsWith(".css"))
@@ -16,7 +18,7 @@ String getContentType(String filename) { // convert the file extension to the MI
   return "text/plain";
 }
 
-void handleFileRead() {
+void Web_Server::handleFileRead() {
   String path = webServer.uri();
   Serial.println("Handle FileRead: " + path);
 
@@ -26,15 +28,15 @@ void handleFileRead() {
 
   // If request is captive request, followed with a GUID
   if(path.startsWith("/generate_204")){    
-    redirect();
+    webserver.redirect();
     return;
   }
 
-  if (SPIFFS.exists(path)) {
-    File file = SPIFFS.open(path, "r");
+  if (LittleFS.exists(path)) {
+    File file = LittleFS.open(path, "r");
     String fileSize = String(file.size());
     //Check File "Version" (Size) is still the same, otherwise sumbit it
-    if (ProcessETag(fileSize.c_str())) {
+    if (helper.ProcessETag(fileSize.c_str())) {
       file.close();
       return;
     }
@@ -45,12 +47,12 @@ void handleFileRead() {
     return;
   }
 
-  handleNotFound();
+  webserver.handleNotFound();
   Serial.println(String("\tFile Not Found: ") + path);
 }
 
-File fsUploadFile;
-void handle_fileupload() {
+void Web_Server::handle_fileupload() {
+  File fsUploadFile;
   HTTPUpload& upload = webServer.upload();
 
   if (upload.status == UPLOAD_FILE_START) {
@@ -61,12 +63,12 @@ void handle_fileupload() {
     Serial.print("handleFileUpload: ");
     Serial.println(filename);
 
-    if (SPIFFS.exists(filename)) {
+    if (LittleFS.exists(filename)) {
       Serial.println(F("\tFile Deleted"));
-      SPIFFS.remove(filename);
+      LittleFS.remove(filename);
     }
 
-    fsUploadFile = SPIFFS.open(filename, "w");
+    fsUploadFile = LittleFS.open(filename, "w");
     filename = String();
   } else if (upload.status == UPLOAD_FILE_WRITE) {
     if (fsUploadFile)
